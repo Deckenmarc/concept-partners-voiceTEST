@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Agent Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: white;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .instructions {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+    </style>
+    <script
+        id="retell-widget"
+        src="https://dashboard.retellai.com/retell-widget.js"
+        data-public-key="YOUR_PUBLIC_KEY"
+        data-agent-id="YOUR_AGENT_ID"
+        data-title="Test Our Voice Agent"
+    ></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Voice Agent Demo</h1>
+        <p class="instructions">Click the widget below to test our voice agent</p>
+        
+        <div style="margin-top: 50px;">
+            <p style="color: #999; font-size: 14px;">
+                <strong>Note:</strong> Replace YOUR_PUBLIC_KEY and YOUR_AGENT_ID in the script tag with your actual Retell credentials.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
