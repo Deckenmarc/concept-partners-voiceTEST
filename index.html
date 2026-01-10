@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voice Agent Demo</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    
+    .instructions {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .widget-container {
+      margin-top: 20px;
+    }
+    
+    p {
+      margin: 10px 0;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Our Voice Agent Demo</h1>
+    
+    <div class="instructions">
+      <h2>How to Use</h2>
+      <p>Click on the voice agent widget below to start interacting with our AI assistant.</p>
+      <p>You can speak naturally and the agent will respond to your questions or requests.</p>
+    </div>
+    
+    <div class="widget-container">
+      <h3>Try our Voice Agent:</h3>
+      <script
+        id="retell-widget"
+        src="https://dashboard.retellai.com/retell-widget.js"
+        data-public-key="YOUR_PUBLIC_KEY"
+        data-agent-id="YOUR_AGENT_ID"
+        data-title="Test Our Agent"
+      ></script>
+    </div>
+  </div>
+</body>
+</html>
