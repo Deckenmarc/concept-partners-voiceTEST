@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice AI Demo</title>
+</head>
+<body>
+    <button id="call-btn" style="padding: 20px; font-size: 20px;">Start Web Call</button>
+
+    <script type="module">
+        import { RetellWebClient } from "https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.7/+esm";
+        const client = new RetellWebClient();
+
+        document.getElementById('call-btn').onclick = async () => {
+            const resp = await fetch('/create-web-call', { method: 'POST' });
+            const data = await resp.json();
+            
+            await client.startCall({
+                accessToken: data.access_token,
+            });
+        };
+    </script>
+</body>
+</html>
