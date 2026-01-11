@@ -3,67 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retell AI Agent - Test</title>
+    <title>Retell AI Agent</title>
     
-    <script src="https://unpkg.com/retell-client-js-sdk/dist/retell-client-js-sdk.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.7/dist/retell-client-js-sdk.bundle.js"></script>
 
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0;
-            background-color: #f8f9fa; 
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        #status { margin: 20px 0; font-weight: bold; color: #666; }
-        button { 
-            padding: 12px 24px; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            border-radius: 6px; 
-            border: none; 
-            background-color: #007bff; 
-            color: white; 
-            transition: background 0.2s;
-        }
-        button:hover { background-color: #0056b3; }
-        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f0f2f5; }
+        .card { text-align: center; padding: 40px; background: white; border-radius: 12px; shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        button { padding: 12px 24px; font-size: 18px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        button:disabled { background: #ccc; }
+        #status { margin-top: 20px; color: #666; }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="card">
         <h1>AI Voice Assistant</h1>
-        <div id="status">Status: Ready</div>
         <button id="call-btn">Start Conversation</button>
+        <div id="status">Status: Ready</div>
     </div>
 
     <script>
-        // --- YOUR EXPOSED KEYS ---
         const AGENT_ID = "agent_4e6e84a091f8fcefc413ad3262";
         const API_KEY = "key_2626472310b8e943e88bd0ae0ffe"; 
 
-        // Initialize the client using the CDN global object
-        const client = new retellClient.RetellClient();
+        let client;
+
+        // This function waits for the library to be ready before trying to use it
+        function initRetell() {
+            try {
+                // Try the two most common names this SDK uses when loaded via CDN
+                if (window.RetellWebClient) {
+                    client = new RetellWebClient();
+                } else if (window.retellClientJsSdk && window.retellClientJsSdk.RetellWebClient) {
+                    client = new window.retellClientJsSdk.RetellWebClient();
+                } else if (window.retellClient && window.retellClient.RetellClient) {
+                    client = new window.retellClient.RetellClient();
+                } else {
+                    throw new Error("SDK not found in browser memory");
+                }
+                console.log("Retell Client Initialized Successfully");
+            } catch (e) {
+                console.error("Initialization Failed:", e);
+                document.getElementById('status').innerText = "Status: SDK Load Error";
+            }
+        }
+
+        // Initialize as soon as the window loads
+        window.onload = initRetell;
+
         const btn = document.getElementById('call-btn');
         const statusDiv = document.getElementById('status');
 
         btn.addEventListener('click', async () => {
+            if (!client) {
+                alert("SDK is not ready yet. Please refresh.");
+                return;
+            }
+
             try {
-                statusDiv.innerText = "Status: Connecting to Retell...";
+                statusDiv.innerText = "Status: Connecting...";
                 btn.disabled = true;
 
-                // Create the call session
+                // 1. Get the session token
                 const response = await fetch("https://api.retellai.com/v2/create-web-call", {
                     method: "POST",
                     headers: {
@@ -73,35 +75,19 @@
                     body: JSON.stringify({ agent_id: AGENT_ID })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.statusText}`);
-                }
-
                 const data = await response.json();
                 
-                // Start the audio/voice session
+                // 2. Start the call
                 await client.startCall({
                     accessToken: data.access_token,
                 });
 
-                statusDiv.innerText = "Status: On Call - Start Talking!";
+                statusDiv.innerText = "Status: On Call";
             } catch (err) {
-                console.error("Detailed Error:", err);
-                statusDiv.innerText = "Status: Error. Check Browser Console.";
+                console.error(err);
+                statusDiv.innerText = "Status: Connection Failed";
                 btn.disabled = false;
             }
-        });
-
-        // Listen for the end of the call
-        client.on("call_ended", () => {
-            statusDiv.innerText = "Status: Call Ended";
-            btn.disabled = false;
-        });
-        
-        client.on("error", (error) => {
-            console.error("Retell Client Error:", error);
-            statusDiv.innerText = "Status: Connection Error";
-            btn.disabled = false;
         });
     </script>
 </body>
