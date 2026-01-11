@@ -6,32 +6,41 @@
     <title>Voice Agent Demo</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 40px;
-            background-color: white;
+            background-color: #f8f9fa;
             text-align: center;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 600px;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        h1 {
+            color: #2d3436;
+            margin-bottom: 10px;
         }
         
         .instructions {
-            color: #666;
-            margin-bottom: 40px;
+            color: #636e72;
+            margin-bottom: 30px;
             font-size: 18px;
         }
     </style>
+
     <script
         id="retell-widget"
         src="https://dashboard.retellai.com/retell-widget.js"
+        type="module" 
         data-public-key="public_key_d3c3a3f25aba25b699504" 
         data-agent-id="agent_4e6e84a091f8fcefc413ad3262"
         data-title="Test Our Voice Agent"
@@ -40,13 +49,8 @@
 <body>
     <div class="container">
         <h1>Voice Agent Demo</h1>
-        <p class="instructions">Click the widget below to test our voice agent</p>
-        
-        <div style="margin-top: 50px;">
-            <p style="color: #999; font-size: 14px;">
-                <strong>Note:</strong> Set RETELL_PUBLIC_KEY and RETELL_AGENT_ID environment variables in your deployment.
-            </p>
-        </div>
+        <p class="instructions">The voice agent widget should appear in the bottom right corner.</p>
+        <p style="color: #0984e3; font-size: 14px;">If you don't see the widget, verify that <strong>test.marcparisotto.com</strong> is whitelisted in Retell.</p>
     </div>
 </body>
 </html>
