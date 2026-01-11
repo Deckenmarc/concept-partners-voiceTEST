@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retell AI Agent</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.7/dist/retell-client-js-sdk.bundle.js"></script>
-
     <style>
         body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f0f2f5; }
-        .card { text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 300px; }
-        button { width: 100%; padding: 12px; font-size: 18px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        .card { text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 320px; }
+        button { width: 100%; padding: 15px; font-size: 18px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; }
         button:disabled { background: #ccc; cursor: not-allowed; }
         #status { margin-top: 20px; color: #666; font-size: 14px; }
     </style>
@@ -18,46 +15,28 @@
 <body>
 
     <div class="card">
-        <h1>AI Voice</h1>
+        <h1>AI Voice Agent</h1>
         <button id="call-btn">Start Conversation</button>
-        <div id="status">Status: Initializing...</div>
+        <div id="status">Status: Loading SDK...</div>
     </div>
 
-    <script>
+    <script type="module">
+        // Import the client directly from the CDN
+        import { RetellWebClient } from "https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.7/+esm";
+
         const AGENT_ID = "agent_4e6e84a091f8fcefc413ad3262";
         const API_KEY = "key_2626472310b8e943e88bd0ae0ffe"; 
 
-        let retellWebClient;
+        const retellWebClient = new RetellWebClient();
         const btn = document.getElementById('call-btn');
         const statusDiv = document.getElementById('status');
 
-        // Function to find the SDK in the browser's window object
-        function getRetellSDK() {
-            if (window.RetellWebClient) return new window.RetellWebClient();
-            if (window.retellClientJsSdk && window.retellClientJsSdk.RetellWebClient) return new window.retellClientJsSdk.RetellWebClient();
-            if (window.retellClient && window.retellClient.RetellWebClient) return new window.retellClient.RetellWebClient();
-            return null;
-        }
-
-        window.onload = () => {
-            retellWebClient = getRetellSDK();
-            if (retellWebClient) {
-                statusDiv.innerText = "Status: Ready";
-                console.log("SDK successfully loaded.");
-            } else {
-                statusDiv.innerText = "Status: SDK Load Error";
-                console.error("Could not find RetellWebClient in window object.");
-            }
-        };
+        // Immediately update status once loaded
+        statusDiv.innerText = "Status: Ready";
 
         btn.addEventListener('click', async () => {
-            if (!retellWebClient) {
-                alert("The SDK failed to load. Please check your internet connection and refresh.");
-                return;
-            }
-
             try {
-                statusDiv.innerText = "Status: Connecting to Agent...";
+                statusDiv.innerText = "Status: Connecting...";
                 btn.disabled = true;
 
                 // 1. Create the call session
@@ -70,11 +49,11 @@
                     body: JSON.stringify({ agent_id: AGENT_ID })
                 });
 
-                if (!response.ok) throw new Error("Failed to create call");
+                if (!response.ok) throw new Error("API call failed. Check your API Key.");
 
                 const data = await response.json();
                 
-                // 2. Start the actual voice call
+                // 2. Start the call using the access token from the API
                 await retellWebClient.startCall({
                     accessToken: data.access_token,
                 });
@@ -87,18 +66,17 @@
             }
         });
 
-        // Event listeners for the voice experience
-        if (retellWebClient) {
-            retellWebClient.on("call_ended", () => {
-                statusDiv.innerText = "Status: Call Ended";
-                btn.disabled = false;
-            });
-            retellWebClient.on("error", (err) => {
-                console.error("SDK Error:", err);
-                statusDiv.innerText = "Status: Call Error";
-                btn.disabled = false;
-            });
-        }
+        // Event listeners
+        retellWebClient.on("call_ended", () => {
+            statusDiv.innerText = "Status: Call Ended";
+            btn.disabled = false;
+        });
+
+        retellWebClient.on("error", (err) => {
+            console.error("SDK Error:", err);
+            statusDiv.innerText = "Status: Call Error";
+            btn.disabled = false;
+        });
     </script>
 </body>
 </html>
