@@ -3,80 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retell AI Agent</title>
+    <title>Voice Agent Demo</title>
     <style>
-        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f0f2f5; }
-        .card { text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 320px; }
-        button { width: 100%; padding: 15px; font-size: 18px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 8px; font-weight: bold; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        #status { margin-top: 20px; color: #666; font-size: 14px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: white;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 18px;
+        }
+        
+        .agents-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .agent-card {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .agent-card h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .agent-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
+    <script
+        id="retell-widget-1"
+        src="https://dashboard.retellai.com/retell-widget.js"
+        data-public-key="__RETELL_PUBLIC_KEY__"
+        data-agent-id="__RETELL_AGENT_ID__"
+        data-title="Test Our Voice Agent"
+    ></script>
+    <script
+        id="retell-widget-2"
+        src="https://dashboard.retellai.com/retell-widget.js"
+        data-public-key="__RETELL_PUBLIC_KEY__"
+        data-agent-id="agent_b478e2f39a19bba36f8ca86185"
+        data-title="ELSA 2 TEST"
+    ></script>
 </head>
 <body>
-
-    <div class="card">
-        <h1>AI Voice Agent</h1>
-        <button id="call-btn">Start Conversation</button>
-        <div id="status">Status: Loading SDK...</div>
+    <div class="container">
+        <h1>Voice Agent Demo</h1>
+        <p class="intro">Test eis zwee Voice Agents mat deem selwechte Szenario fir ze kucken wéi een am beschten reagéiert.</p>
+        
+        <div class="agents-grid">
+            <div class="agent-card">
+                <h2>Agent 1</h2>
+                <p>Dësen Agent ass den éischten Test. Klickt op de Widget fir mat him ze schwätzen an ze testen wéi hien op Är Froen reagéiert.</p>
+                <p style="color: #999; font-size: 14px;">
+                    <strong>Tipp:</strong> Probéiert deeselwechte Szenario mat béide Agents aus fir ze vergläichen.
+                </p>
+            </div>
+            
+            <div class="agent-card">
+                <h2>ELSA 2 TEST</h2>
+                <p>Dësen Agent ass den zweeten Test. Benotzt deeselwechte Szenario wéi beim éischten Agent fir ze kucken wéi een besser funktionéiert.</p>
+                <p style="color: #999; font-size: 14px;">
+                    <strong>Tipp:</strong> Notéiert Ären Androck vun all Agent fir se ze vergläichen.
+                </p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 50px; text-align: center;">
+            <p style="color: #999; font-size: 14px;">
+                <strong>Note:</strong> Set RETELL_PUBLIC_KEY and RETELL_AGENT_ID environment variables in your deployment.
+            </p>
+        </div>
     </div>
-
-    <script type="module">
-        // Import the client directly from the CDN
-        import { RetellWebClient } from "https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.7/+esm";
-
-        const AGENT_ID = "agent_4e6e84a091f8fcefc413ad3262";
-        const API_KEY = "key_2626472310b8e943e88bd0ae0ffe"; 
-
-        const retellWebClient = new RetellWebClient();
-        const btn = document.getElementById('call-btn');
-        const statusDiv = document.getElementById('status');
-
-        // Immediately update status once loaded
-        statusDiv.innerText = "Status: Ready";
-
-        btn.addEventListener('click', async () => {
-            try {
-                statusDiv.innerText = "Status: Connecting...";
-                btn.disabled = true;
-
-                // 1. Create the call session
-                const response = await fetch("https://api.retellai.com/v2/create-web-call", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${API_KEY}`
-                    },
-                    body: JSON.stringify({ agent_id: AGENT_ID })
-                });
-
-                if (!response.ok) throw new Error("API call failed. Check your API Key.");
-
-                const data = await response.json();
-                
-                // 2. Start the call using the access token from the API
-                await retellWebClient.startCall({
-                    accessToken: data.access_token,
-                });
-
-                statusDiv.innerText = "Status: On Call";
-            } catch (err) {
-                console.error("Call Error:", err);
-                statusDiv.innerText = "Status: Connection Failed";
-                btn.disabled = false;
-            }
-        });
-
-        // Event listeners
-        retellWebClient.on("call_ended", () => {
-            statusDiv.innerText = "Status: Call Ended";
-            btn.disabled = false;
-        });
-
-        retellWebClient.on("error", (err) => {
-            console.error("SDK Error:", err);
-            statusDiv.innerText = "Status: Call Error";
-            btn.disabled = false;
-        });
-    </script>
 </body>
 </html>
