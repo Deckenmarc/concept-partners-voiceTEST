@@ -32,9 +32,10 @@
         
         .agents-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
+            max-width: 600px;
+            margin: 40px auto 0;
             gap: 40px;
-            margin-top: 40px;
         }
         
         .agent-card {
@@ -108,15 +109,7 @@
                 </p>
             </div>
             
-            <div class="agent-card">
-                <h2>ELSA 2 TEST</h2>
-                <p>Dësen Agent ass den zweeten Test. Benotzt deeselwechte Szenario wéi beim éischten Agent fir ze kucken wéi een besser funktionéiert.</p>
-                <button class="call-button" id="agent2-btn">Start ELSA 2</button>
-                <div class="status" id="agent2-status"></div>
-                <p style="color: #999; font-size: 14px; margin-top: 20px;">
-                    <strong>Tipp:</strong> Notéiert Ären Androck vun all Agent fir se ze vergläichen.
-                </p>
-            </div>
+
         </div>
     </div>
 
@@ -125,7 +118,6 @@
 
         const API_KEY = "key_2626472310b8e943e88bd0ae0ffe";
         const AGENT1_ID = "agent_581112065fef31b42c2e268eb4";
-        const AGENT2_ID = "agent_b478e2f39a19bba36f8ca86185";
 
         let currentClient = null;
 
@@ -185,9 +177,7 @@
             startCall(AGENT1_ID, 'agent1-btn', 'agent1-status');
         });
 
-        document.getElementById('agent2-btn').addEventListener('click', () => {
-            startCall(AGENT2_ID, 'agent2-btn', 'agent2-status');
-        });
+
     </script>
 </body>
 </html>
